@@ -1,0 +1,110 @@
+{
+    "questions" : [
+          {
+            "id": 0,
+            "pitanje": "Da li je?",
+            "a":"da",
+            "b":"ne",
+            "c":"mozda",
+            "tacan odgovor":"a"
+          },
+          {
+            "id": 1,
+            "pitanje": "Koji je glavni grad Srbije?",
+            "a": "Beograd",
+            "b": "Novi Sad",
+            "c": "Niš",
+            "d": "Kragujevac",
+            "tacan odgovor": "a"
+          },
+          {
+            "id": 2,
+            "pitanje": "Ko je napisao roman 'Na Drini ćuprija'?",
+            "a": "Ivo Andrić",
+            "b": "Aleksandar Tišma",
+            "c": "Danilo Kiš",
+            "d": "Momo Kapor",
+            "tacan odgovor": "a"
+          },
+          {
+            "id": 3,
+            "pitanje": "Koja reka teče kroz Beograd?",
+            "a": "Sava",
+            "b": "Tisa",
+            "c": "Drina",
+            "d": "Morava",
+            "tacan odgovor": "a"
+          },
+          {
+            "id": 4,
+            "pitanje": "Kako se zove najveće jezero u Srbiji?",
+            "a": "Palićko jezero",
+            "b": "Đerdapsko jezero",
+            "c": "Uvac",
+            "d": "Peskara",
+            "tacan odgovor": "b"
+          },
+          {
+            "id": 5,
+            "pitanje": "Ko je bio osnivač moderne srpske države?",
+            "a": "Knez Miloš",
+            "b": "Karađorđe Petrović",
+            "c": "Kralj Aleksandar",
+            "d": "Kralj Milan",
+            "tacan odgovor": "b"
+          },
+          {
+            "id": 6,
+            "pitanje": "Koja planina se nalazi na granici Srbije i Bugarske?",
+            "a": "Kopaonik",
+            "b": "Stara planina",
+            "c": "Tara",
+            "d": "Šar planina",
+            "tacan odgovor": "b"
+          },
+          {
+            "id": 7,
+            "pitanje": "Ko je bio vođa Prvog srpskog ustanka?",
+            "a": "Karađorđe Petrović",
+            "b": "Miloš Obrenović",
+            "c": "Knez Mihailo",
+            "d": "Karađorđe",
+            "tacan odgovor": "a"
+          },
+          {
+            "id": 8,
+            "pitanje": "Koja manifestacija se održava svake godine u Guči?",
+            "a": "Sabor trubača",
+            "b": "Exit festival",
+            "c": "Bir fest",
+            "d": "Gitarijada",
+            "tacan odgovor": "a"
+          },
+          {
+            "id": 9,
+            "pitanje": "Kako se zove popularno srpsko jelo od mlevenog mesa i luka?",
+            "a": "Sarma",
+            "b": "Ćevapi",
+            "c": "Pljeskavica",
+            "d": "Musaka",
+            "tacan odgovor": "c"
+          },
+          {
+            "id": 10,
+            "pitanje": "Koje godine je Srbija osvojila svetsko prvenstvo u košarci?",
+            "a": "1992.",
+            "b": "1996.",
+            "c": "2002.",
+            "d": "2010.",
+            "tacan odgovor": "a"
+          },
+          {
+            "id": 11,
+            "pitanje": "Da li je ili nije?",
+            "a":"da",
+            "b":"ne",
+            "c":"mozda",
+            "tacan odgovor":"c"
+          }
+    ]
+}
