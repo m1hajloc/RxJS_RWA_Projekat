@@ -6,11 +6,12 @@ console.log(Url);
 
 const timer$ = interval(1000);
 const time = document.querySelector('.timer');
-timer$.pipe(map(id=>{
-    return 10-id;
-}))
-
-
+const questionContainer = document.querySelector('.question');
+const answerButtons = document.querySelectorAll('.answer-button');
+const progressBar:HTMLDivElement = document.querySelector('.progress-bar');
+let pitanja: any[] = [];
+let currentQuestionIndex = 0;
+let timerSubscription: any;
 
 function fetchQuestions(url: string) {
   return fetch(url)
@@ -24,93 +25,99 @@ function fetchQuestions(url: string) {
       return data;
     })
     .catch(error => {
-      console.error('Error fetching questions:', error);
+      console.error('Greska prilikoom fatchovanja:', error);
     });
 }
 
+function startTimer() 
+{
+  time.innerHTML = "10";
+  progressBar.style.width = `100%`;
 
-
-
-
-// Assuming you have a question container with the class "question" in your HTML
-const questionContainer = document.querySelector('.question');
-
-// Function to display a question
-function displayQuestion(question: any) {
-  // Update the content of the existing question container
-  questionContainer.textContent = question.pitanje;
-
-  // Create answer buttons (assuming you have buttons with class "answer-button")
-  const answerButtons = document.querySelectorAll('.answer-button');
-
-
- 
-    const answerText = question.pitanje; // Use the index directly to get the answer text
+  timerSubscription = timer$.pipe(map(id => 9 - id)).subscribe(id => {
+    if (id >= 0) {
+      time.innerHTML = id.toString();
+        const width = (id / 10) * 100;
+        progressBar.style.width = `${width}%`;
+    } else {
+      time.innerHTML = "0"; 
+  answerButtons.forEach(button => {
+    (button as HTMLButtonElement).disabled = true;
+    if(button.textContent === pitanja[currentQuestionIndex].tacanodgovor)
+    {
+      button.classList.add('correct-not-answered')
+    }
+  });
     
+  if (timerSubscription) {
+    timerSubscription.unsubscribe();
+  }
+
+  setTimeout(() => {
+    answerButtons.forEach(button => {
+      (button as HTMLButtonElement).classList.remove('correct-not-answered');
+      (button as HTMLButtonElement).disabled = false;
+    });
+    moveToNextQuestion();
+  }, 2000);
+
+    }
+  });
+}
+
+function SetUpEventListenersToButtons()
+{
+  for (let i = 0; i < 4; i++) 
+  {
+    const answerButton = answerButtons[i] as HTMLButtonElement;
+    answerButton.addEventListener('click', () => handleAnswerClick(answerButton));
+  }
+}
+
+function displayQuestion(question: any) 
+  {
+    startTimer();
+    questionContainer.textContent = question.pitanje;
     answerButtons[0].textContent = question.a;
     answerButtons[1].textContent = question.b;
     answerButtons[2].textContent = question.c;
     answerButtons[3].textContent = question.d;
-    // Add a click event listener to handle answer selection (we'll implement this next)
-    for (let i = 0; i < 4; i++) 
-    {
-      const answerButton = answerButtons[i] as HTMLButtonElement;
-      answerButton.addEventListener('click', () => handleAnswerClick(answerButton, question));
-    }
-}
+  }
 
-// Function to handle user's answer click
-function handleAnswerClick(answerButton: HTMLButtonElement, question: any) {
-  // Check if the selected answer text matches the correct answer text
+function handleAnswerClick(answerButton: HTMLButtonElement) {
   console.log(answerButton.textContent)
-  console.log(question.tacanodgovor)
-  if (answerButton.textContent === question.tacanodgovor) {
-    // Correct answer handling (you can customize this part)
+  console.log(pitanja[currentQuestionIndex].tacanodgovor)
+  if (answerButton.textContent === pitanja[currentQuestionIndex].tacanodgovor) {
     console.log('Correct answer!');
     answerButton.classList.add('correct');
   } else {
-    // Wrong answer handling (you can customize this part)
     console.log('Wrong answer.');
     answerButton.classList.add('wrong');
   }
-
-  // Disable all answer buttons to prevent further clicks
-  const answerButtons = document.querySelectorAll('.answer-button');
+  
   answerButtons.forEach(button => {
     (button as HTMLButtonElement).disabled = true;
   });
 
-  // Wait for 2 seconds before moving to the next question
+  if (timerSubscription) {
+    timerSubscription.unsubscribe();
+  }
   setTimeout(() => {
-    // Reset answer buttons and move to the next question
     answerButtons.forEach(button => {
       (button as HTMLButtonElement).classList.remove('correct', 'wrong');
       (button as HTMLButtonElement).disabled = false;
     });
-
-    // Move to the next question (we'll implement this part next)
     moveToNextQuestion();
   }, 2000);
 }
-// Assuming you have an array of questions loaded from your JSON data
-let pitanja: any[] = [];
 
-// Define a variable to keep track of the current question index
-let currentQuestionIndex = 0;
 
-// Function to move to the next question
-function moveToNextQuestion() {
-  // Check if there are more questions to display
+function moveToNextQuestion() 
+{
   if (currentQuestionIndex < pitanja.length - 1) {
-    // Increment the current question index
     currentQuestionIndex++;
-
-    startTimer();
-    // Display the next question
     displayQuestion(pitanja[currentQuestionIndex]);
   } else {
-    // If there are no more questions, you can handle the end of the quiz here
-    // For example, show a "Quiz Finished" message or navigate to a results page
     console.log('Quiz Finished');
   }
 }
@@ -120,26 +127,6 @@ fetchQuestions(Url).then(questions => {
   {
       pitanja[i] = questions[Math.round(Math.random()*12)]
   }
-  
-
+  SetUpEventListenersToButtons();
   displayQuestion(pitanja[0]); 
 });
-// Create a variable to store the timer subscription
-let timerSubscription: any;
-
-// Function to start or restart the timer
-function startTimer() {
-  // Clear any existing timer subscription
-  if (timerSubscription) {
-    timerSubscription.unsubscribe();
-  }
-
-  // Start a new timer
-  timerSubscription = timer$.pipe(map(id => 10 - id)).subscribe(id => {
-    if (id > 0) {
-      time.innerHTML = id.toString();
-    } else {
-      time.innerHTML = "0";
-    }
-  });
-}

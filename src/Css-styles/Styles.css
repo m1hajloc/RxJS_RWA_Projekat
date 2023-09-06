@@ -21,15 +21,20 @@
     transform: scaleX(1);
     transition: transform 1s linear;
   }
+  
   .question {
     font-size: 24px;
     margin: 80px ;
+  }
+  .correct-not-answered
+  {
+    background-color: greenyellow !important;
   }
   .correct {
     background-color: green !important;
   }
   .wrong{
-    background-color: red ;
+    background-color: red !important;
   }
 
   .answer-buttons {
