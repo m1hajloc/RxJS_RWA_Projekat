@@ -25,6 +25,13 @@
     font-size: 24px;
     margin: 80px ;
   }
+  .correct {
+    background-color: green !important;
+  }
+  .wrong{
+    background-color: red ;
+  }
+
   .answer-buttons {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
