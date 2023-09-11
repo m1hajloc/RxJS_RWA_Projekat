@@ -1,17 +1,25 @@
-import { interval,Subject,fromEvent,map,switchMap,takeUntil } from "rxjs";
+import { interval,map } from "rxjs";
 const Url:string = "http://localhost:3000/questions/";
 console.log(Url);
+import { Question } from './Interfaces/question';
 
-//const pitanja[5]:
 
 const timer$ = interval(1000);
 const time = document.querySelector('.timer');
 const questionContainer = document.querySelector('.question');
 const answerButtons = document.querySelectorAll('.answer-button');
 const progressBar:HTMLDivElement = document.querySelector('.progress-bar');
-let pitanja: any[] = [];
+const startButton : HTMLButtonElement = document.querySelector('.start-button');
+const currentScoreElement = document.getElementById('current-score');
+const highscoreElement = document.getElementById('highscore');
+let pom:number = 0;
+let score = 0;
+let highscore = 0;
+let pitanja: Question[] = [];
 let currentQuestionIndex = 0;
 let timerSubscription: any;
+
+
 
 function fetchQuestions(url: string) {
   return fetch(url)
@@ -36,7 +44,7 @@ function startTimer()
 
   timerSubscription = timer$.pipe(map(id => 9 - id)).subscribe(id => {
     if (id >= 0) {
-      time.innerHTML = id.toString();
+      time.innerHTML = (id+1).toString();
         const width = (id / 10) * 100;
         progressBar.style.width = `${width}%`;
     } else {
@@ -65,14 +73,20 @@ function startTimer()
   });
 }
 
+
 function SetUpEventListenersToButtons()
 {
+  if (pom==0){
   for (let i = 0; i < 4; i++) 
   {
     const answerButton = answerButtons[i] as HTMLButtonElement;
     answerButton.addEventListener('click', () => handleAnswerClick(answerButton));
   }
+  }
+  pom++;
 }
+
+
 
 function displayQuestion(question: any) 
   {
@@ -84,15 +98,27 @@ function displayQuestion(question: any)
     answerButtons[3].textContent = question.d;
   }
 
+
+
+
 function handleAnswerClick(answerButton: HTMLButtonElement) {
   console.log(answerButton.textContent)
   console.log(pitanja[currentQuestionIndex].tacanodgovor)
   if (answerButton.textContent === pitanja[currentQuestionIndex].tacanodgovor) {
-    console.log('Correct answer!');
+    
+    score+=parseInt(time.innerHTML);
+    currentScoreElement.textContent = score.toString();
     answerButton.classList.add('correct');
   } else {
-    console.log('Wrong answer.');
+    
+    score-=5;
+    currentScoreElement.textContent = score.toString();
     answerButton.classList.add('wrong');
+    answerButtons.forEach(button => {
+      if(button.textContent === pitanja[currentQuestionIndex].tacanodgovor)
+      {
+        button.classList.add('correct-not-answered')
+      }})
   }
   
   answerButtons.forEach(button => {
@@ -104,7 +130,7 @@ function handleAnswerClick(answerButton: HTMLButtonElement) {
   }
   setTimeout(() => {
     answerButtons.forEach(button => {
-      (button as HTMLButtonElement).classList.remove('correct', 'wrong');
+      (button as HTMLButtonElement).classList.remove('correct','correct-not-answered', 'wrong');
       (button as HTMLButtonElement).disabled = false;
     });
     moveToNextQuestion();
@@ -112,21 +138,46 @@ function handleAnswerClick(answerButton: HTMLButtonElement) {
 }
 
 
+
+
+
 function moveToNextQuestion() 
 {
+  
   if (currentQuestionIndex < pitanja.length - 1) {
     currentQuestionIndex++;
     displayQuestion(pitanja[currentQuestionIndex]);
   } else {
-    console.log('Quiz Finished');
+    if (highscore<score)
+  {
+
+    highscore=score
+    highscoreElement.textContent = highscore.toString();
+  }
+    startButton.style.visibility = 'visible';
+    alert("Your Score is: " + score + "\nIf you want to try again click button Play again!");
+    answerButtons.forEach(button => {
+      (button as HTMLButtonElement).disabled = true;})
   }
 }
 
-fetchQuestions(Url).then(questions => {
-  for (let i=0;i<5;i++)
-  {
-      pitanja[i] = questions[Math.round(Math.random()*12)]
-  }
-  SetUpEventListenersToButtons();
-  displayQuestion(pitanja[0]); 
+
+
+startButton.addEventListener('click', () => {
+  score=0;
+  currentQuestionIndex = 0;
+  currentScoreElement.textContent = "0";
+  answerButtons.forEach(button => {
+  (button as HTMLButtonElement).disabled = false;})
+  fetchQuestions(Url).then(questions => {
+    for (let i=0;i<5;i++)
+    {
+        pitanja[i] = questions[Math.round(Math.random()*25)]
+    }
+    startButton.style.visibility = 'hidden';
+    startButton.textContent = "Play Again";
+    SetUpEventListenersToButtons();
+    
+    displayQuestion(pitanja[0]); 
+  });
 });
